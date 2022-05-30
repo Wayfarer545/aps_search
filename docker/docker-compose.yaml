@@ -1,0 +1,22 @@
+version: '3.6'
+services:
+  APS_search:
+    image: aps_search:latest
+    container_name: aps_search
+    restart: always
+    ports:
+      - "9900:9900"
+    environment:
+      BIND: "0.0.0.0:9900"
+      ## DATABASE CONNECTION
+      DB_HOST: ""
+      DB_NAME: ""
+      DB_USER: ""
+      DB_PASSWORD: ""
+      ## ELASTICSEARCH CONNECTION
+      ES_SOCKET: ""
+      TEST_INDEX: ""
+networks:
+  default:
+    external:
+      name:

@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  description: "This is a search server, that provides full-text search on random text
+    request and allows to delete any data via id number.
+    You can find out more about APS search at [official GitHub repository](https://github.com/Wayfarer545/aps_test)"
+  title: "APS search microservice"
+  version: 1.0.0
+
+paths:
+  /api:
+    get:
+      tags: ["main"]
+      summary: "Returns search results"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                text:
+                  type: string
+                  required: true
+                  example: "соли-спайсы"
+      responses:
+        200:
+          description: "A list of search results"
+          content:
+            application/json:
+              schema:
+                properties:
+                  enum:
+                    properties:
+                      id:
+                        type: integer
+                        example: "142"
+                      rubrics:
+                        type: string
+                        example: "['VK-99038476477']"
+                      text:
+                        type: string
+                        example: "some_text"
+                      created_date:
+                        type: string
+                        example: "2019-12-21 04:15:00"
+        404:
+          description: ""
+          content:
+            text/html:
+              example:
+                "No results"
+        500:
+          description: ""
+          content:
+            text/html:
+              example:
+                "Index/database connection error. Check config."
+
+    delete:
+      tags: ["main"]
+      summary: "Deletes appropriate information from database and index using id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: integer
+                  required: true
+                  example: "1451"
+      responses:
+        200:
+          description: ""
+          content:
+            text/html:
+              example:
+                "id 1451 deleted"
+        400:
+          description: ""
+          content:
+            text/html:
+              example:
+                "Wrong id data type. Use integer only"
+        410:
+          description: ""
+          content:
+            text/html:
+              example:
+                "id not found"
+        500:
+          description: ""
+          content:
+            text/html:
+              example:
+                "Failed to delete"
+
+
+
+
+
+
+
+
+
+
