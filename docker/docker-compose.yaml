@@ -1,7 +1,7 @@
 version: '3.6'
 services:
   APS_search:
-    image: aps_search:latest
+    image: wayfarer737/aps_search:latest
     container_name: aps_search
     restart: always
     ports:
@@ -9,14 +9,15 @@ services:
     environment:
       BIND: "0.0.0.0:9900"
       ## DATABASE CONNECTION
-      DB_HOST: ""
-      DB_NAME: ""
-      DB_USER: ""
-      DB_PASSWORD: ""
+      DB_HOST: "172.18.0.6"
+      DB_PORT: "5432"
+      DB_NAME: "my_db"
+      DB_USER: "wayfarer"
+      DB_PASSWORD: "wayfarer"
       ## ELASTICSEARCH CONNECTION
-      ES_SOCKET: ""
-      TEST_INDEX: ""
+      ES_SOCKET: "172.18.0.5:9200"
+      TEST_INDEX: "posts"
 networks:
   default:
     external:
-      name:
+      name: elastic_net

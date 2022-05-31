@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-
 import os
 import json
+import time
+
 import flask
 from flask import request
 import psycopg
 from psycopg.rows import dict_row
+from elasticsearch import helpers
 from elasticsearch_dsl import Search
 from elasticsearch_dsl import connections
 from dotenv import load_dotenv
@@ -16,12 +18,13 @@ class MainWorker:
     def __init__(self):
         # load environment variables
         load_dotenv()
-        self.__test_index = os.getenv('TEST_INDEX')
+        self.__test_index = os.getenv('TEST_INDEX') or "aps_search"
         self.__es_socket = os.getenv('ES_SOCKET')
         self.__db_name = os.getenv('DB_NAME')
         self.__db_user = os.getenv('DB_USER')
         self.__db_pwd = os.getenv('DB_PASSWORD')
         self.__db_host = os.getenv('DB_HOST')
+        self.index_init()
 
     @staticmethod
     def response_maker(code, data, flag=False):
@@ -38,6 +41,38 @@ class MainWorker:
             mimetype=mime,
             response=resp
         )
+
+    def index_init(self):
+        settings = {
+            "settings": {
+                "index": {
+                    "number_of_shards": 5,
+                    "number_of_replicas": 0
+                }
+            },
+            "mappings": {
+                "dynamic": "strict",
+                "properties": {
+                    "iD": {
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "text",
+                        "analyzer": "russian"
+                    }
+                }
+            }
+        }
+        try:
+            with self.__es_connect() as __es_connection:
+                with self.__db_connect() as __db_connection:
+                    if not __es_connection.indices.exists(index=self.__test_index):
+                        __es_connection.indices.create(index=self.__test_index, body=settings)
+                        data = __db_connection.execute(
+                            """SELECT id AS "iD", text FROM {};""".format(self.__test_index)).fetchall()
+                        helpers.bulk(__es_connection, data, index=self.__test_index)
+        except Exception as error:
+            print("[WARNING] Index creation failed. Check config and restart. \n", error)
 
     def __db_connect(self):
         """ Creates new postgres connection
@@ -123,7 +158,7 @@ class MainWorker:
                 with self.__db_connect() as __db_connection:
                     db_response = __db_connection.execute(f"DELETE FROM {self.__test_index} WHERE id = {delete_id}")
                     if db_response.statusmessage.endswith('1'):
-                        __es_connection.delete(index=self.__test_index, id=delete_id, refresh="true")
+                        Search(using=__es_connection, index=self.__test_index).query("match", iD=delete_id).delete()
                         __db_connection.commit()
                         return self.response_maker(200, f'id {delete_id} deleted')
                     else:
@@ -132,6 +167,13 @@ class MainWorker:
         except Exception as error:
             print("[ERROR] Unable to connect either database or index: \n", error)
             return self.response_maker(500, "Failed to delete")
+
+    def __del__(self):
+        __connection = self.__es_connect()
+        __index_status = __connection.indices.exists(index=self.__test_index)
+        if __index_status:
+            __connection.indices.delete(index=self.__test_index)
+            print("[INFO] Index deleted")
 
 
 worker = MainWorker()
