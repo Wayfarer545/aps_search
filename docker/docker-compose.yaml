@@ -7,17 +7,16 @@ services:
     ports:
       - "9900:9900"
     environment:
-      BIND: "0.0.0.0:9900"
+      BIND: ""
       ## DATABASE CONNECTION
-      DB_HOST: "172.18.0.6"
-      DB_PORT: "5432"
-      DB_NAME: "my_db"
-      DB_USER: "wayfarer"
-      DB_PASSWORD: "wayfarer"
+      DB_HOST: ""
+      DB_NAME: ""
+      DB_USER: ""
+      DB_PASSWORD: ""
       ## ELASTICSEARCH CONNECTION
-      ES_SOCKET: "172.18.0.5:9200"
-      TEST_INDEX: "posts"
+      ES_SOCKET: ""
+      TEST_INDEX: "" # Optional
 networks:
   default:
     external:
-      name: elastic_net
+      name:
