@@ -47,7 +47,7 @@ Unfortunatelly, i still didn't make tests and async methods here.
 
 How to use  
 You can find matching records (maximum 20 pcs.) or delete record by id from database.  
-Both GET and DELETE requests should include apropriate form-data.  
+Both GET and DELETE requests should include apropriate request body.  
 For search:  
 ```python
 import json
