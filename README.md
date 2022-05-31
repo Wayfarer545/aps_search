@@ -11,7 +11,7 @@ Database structure should include following columns: id (PK), rubrics, text, cre
 Got it?  
 Ok, now you are ready to start container.  
   
-The best way to that is to use Docker-compose.  
+The best way is to use Docker-compose.  
 Example of docker-compose.yml:
 ```yml
 version: '3.6'
