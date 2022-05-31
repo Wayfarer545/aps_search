@@ -5,7 +5,7 @@ Service developed using flask (syc), psycopg (v.3) as a Postgres ORM and elastic
 ES connection module. This works in Docker container and uses data from PostgreSQL,  
 makes an index in Elasticsearch and handles GET and DELETE http responses.  
   
-Get started  
+### Get started
 First of all, you have to get running elasticsearch server, postgres db and table with apropriate data.  
 Database structure should include following columns: id (PK), rubrics, text, created_data.  
 Got it?  
@@ -41,11 +41,11 @@ Docker image "wayfarer737/aps_search:latest" is based on "tiangolo/meinheld-guni
 Basic image includes python3.8, gunicorn 20.1.0 and meinheld wsgi as worker of gunicorn.  
 It also provides flask, but had been replaced with a 2.1.2 version during an image build (and works normal).  
 All you need is to specify environment variables, providing elasticsearch server and postgres connection, and define your own networking.  
-By default will be used postgres "5432" port.  
-IMPORTANT. Real postgres table name should be specifyed as a TEST_INDEX variable.  
+  
+**IMPORTANT**. Real postgres table name should be specifyed as a TEST_INDEX variable.  
 Unfortunatelly, i still didn't make tests and async methods here. 
 
-How to use  
+### How to use  
 You can find matching records (maximum 20 pcs.) or delete record by id from database.  
 Both GET and DELETE requests should include apropriate request body.  
 For search:  
