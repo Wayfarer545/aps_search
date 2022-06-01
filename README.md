@@ -42,8 +42,7 @@ Basic image includes python3.8, gunicorn 20.1.0 and meinheld wsgi as worker of g
 It also provides flask, but had been replaced with a 2.1.2 version during an image build (and works normal).  
 All you need is to specify environment variables, providing elasticsearch server and postgres connection, and define your own networking.  
   
-**IMPORTANT**. Real postgres table name should be specifyed as a TEST_INDEX variable.  
-Unfortunatelly, i still didn't make tests and async methods here. 
+**IMPORTANT**. Real postgres table name should be specifyed as a TEST_INDEX variable.   
 
 ### How to use  
 You can find matching records (maximum 20 pcs.) or delete record by id from database.  
