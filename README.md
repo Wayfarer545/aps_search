@@ -1,7 +1,7 @@
 # aps_search microservice  
   
 Hi there. Here is my homework.  
-Service developed using flask, psycopg (v.3) as a Postgres ORM and elasticsearch_dsl as an official  
+The microservice is developed using flask, psycopg (v.3) as a Postgres ORM and elasticsearch_dsl as an official  
 ES connection module. This works in Docker container and uses data from PostgreSQL,  
 makes an index in Elasticsearch and handles GET and DELETE http requests.  
   
